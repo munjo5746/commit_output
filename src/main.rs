@@ -1,5 +1,5 @@
+use colored::*;
 use std::process::Command;
-
 fn main() {
     // get current branch name by running "grep '^\*' | cut -d' ' -f2 | tr -d '\n'"
     let git_branch = Command::new("git").arg("branch").output().expect("fail");
@@ -13,18 +13,30 @@ fn main() {
 
     let current_branch = current_branch_with_star.replace("*", "").trim().to_string();
     print!("\n\n");
-    println!("Your current branch: {}", current_branch);
 
     let potential_ticket_number = current_branch.split("/").nth(0).unwrap();
     let ticket_number = if potential_ticket_number.contains("AV2") {
-        potential_ticket_number
+        potential_ticket_number.to_string()
     } else {
-        "-"
+        "-".to_string()
     };
 
-    println!("Your ticket number: {}", ticket_number);
-    println!(
-        "Your ticket number: https://theconstellationagency.atlassian.net/browse/{}",
-        ticket_number
-    );
+    println!("{}", get_line("branch", current_branch));
+    println!("{}", get_line("ticket", ticket_number));
+    println!("{}", get_line("ticket_url", "".to_string()));
+}
+
+fn get_line(kind: &str, arg: String) -> String {
+    let result = match kind {
+        "branch" => format("Your current branch".to_string(), arg),
+        "ticket" => format("Your ticket number".to_string(), arg),
+        "ticket_url" => format("Your ticket url".to_string(), arg),
+        _ => "Unknown".to_string(),
+    };
+
+    result
+}
+
+fn format(title: String, arg: String) -> String {
+    format!("{0:<20}: {1}", title.green(), arg).to_string()
 }
