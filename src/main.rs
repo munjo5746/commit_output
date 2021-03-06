@@ -27,12 +27,13 @@ fn main() {
         "-".to_string()
     };
 
-    println!("{}", get_line("branch", current_branch));
-    println!("{}", get_line("ticket", ticket_number));
-    println!("{}", get_line("ticket_url", jira_ticket_url));
+    println!();
+    println!("{}", get_info("branch", current_branch));
+    println!("{}", get_info("ticket", ticket_number));
+    println!("{}", get_info("ticket_url", jira_ticket_url));
 }
 
-fn get_line(kind: &str, arg: String) -> String {
+fn get_info(kind: &str, arg: String) -> String {
     let result = match kind {
         "branch" => format("Your current branch".to_string(), arg),
         "ticket" => format("Your ticket number".to_string(), arg),
@@ -44,5 +45,5 @@ fn get_line(kind: &str, arg: String) -> String {
 }
 
 fn format(title: String, arg: String) -> String {
-    format!("{0:<20}: {1}", title.green(), arg).to_string()
+    format!("{0:<20}: {1}", title.yellow(), arg).to_string()
 }
