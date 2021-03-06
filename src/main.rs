@@ -10,21 +10,23 @@ fn main() {
         .into_iter()
         .find(|line| line.contains("*"))
         .unwrap();
+
     print!("\n\n");
     println!(
         "Your current branch: {}",
         current_branch.replace("*", "").trim()
     );
-    println!(
-        "Your ticket number: {}",
-        current_branch.replace("*", "").trim()
-    );
+
+    let potential_ticket_number = current_branch.split("/").nth(0).unwrap();
+    let ticket_number = if potential_ticket_number.contains("AV2") {
+        potential_ticket_number
+    } else {
+        "-"
+    };
+
+    println!("Your ticket number: {}", ticket_number);
     println!(
         "Your ticket number: https://theconstellationagency.atlassian.net/browse/{}",
         current_branch.replace("*", "").trim()
     );
-    // match String::from_utf8(output.stdout) {
-    //     Ok(content) => { println!("output: {}", content)}
-    //     Err(err) => { panic!(err)}
-    // }
 }
