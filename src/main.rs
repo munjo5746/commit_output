@@ -12,7 +12,6 @@ fn main() {
         .unwrap();
 
     let current_branch = current_branch_with_star.replace("*", "").trim().to_string();
-    print!("\n\n");
 
     let potential_ticket_number = current_branch.split("/").nth(0).unwrap();
     let ticket_number = if potential_ticket_number.contains("AV2") {
@@ -21,9 +20,16 @@ fn main() {
         "-".to_string()
     };
 
+    let jira_url_prefix = "https://theconstellationagency.atlassian.net/browse";
+    let jira_ticket_url = if ticket_number != "-" {
+        format!("{0}/{1}", jira_url_prefix, ticket_number)
+    } else {
+        "-".to_string()
+    };
+
     println!("{}", get_line("branch", current_branch));
     println!("{}", get_line("ticket", ticket_number));
-    println!("{}", get_line("ticket_url", "".to_string()));
+    println!("{}", get_line("ticket_url", jira_ticket_url));
 }
 
 fn get_line(kind: &str, arg: String) -> String {
