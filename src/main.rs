@@ -30,7 +30,7 @@ fn get_current_branch() -> String {
 }
 
 fn get_ticket_number(branch: &str) -> String {
-    let potential_ticket_number = branch.clone().split("/").nth(0).unwrap();
+    let potential_ticket_number = branch.split("/").nth(0).unwrap();
 
     if potential_ticket_number.contains("AV2") {
         potential_ticket_number.to_string()
