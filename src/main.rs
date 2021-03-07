@@ -5,10 +5,10 @@ fn main() {
 
     let current_branch = get_current_branch();
 
-    let ticket_number = get_ticket_number(current_branch.as_str());
+    let ticket_number = get_ticket_number(&current_branch);
 
     let url_prefix = "https://theconstellationagency.atlassian.net/browse";
-    let jira_ticket_url = get_ticket_url(url_prefix, ticket_number.as_str());
+    let jira_ticket_url = get_ticket_url(&url_prefix.to_string(), &ticket_number);
 
     println!();
     println!("{}", get_info("branch", current_branch));
@@ -29,7 +29,7 @@ fn get_current_branch() -> String {
     current_branch_with_star.replace("*", "").trim().to_string()
 }
 
-fn get_ticket_number(branch: &str) -> String {
+fn get_ticket_number(branch: &String) -> String {
     let potential_ticket_number = branch.split("/").nth(0).unwrap();
 
     if potential_ticket_number.contains("AV2") {
@@ -39,7 +39,7 @@ fn get_ticket_number(branch: &str) -> String {
     }
 }
 
-fn get_ticket_url(url_prefix: &str, ticket_number: &str) -> String {
+fn get_ticket_url(url_prefix: &String, ticket_number: &String) -> String {
     if ticket_number != "-" {
         format!("{0}/{1}", url_prefix, ticket_number)
     } else {
