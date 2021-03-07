@@ -2,6 +2,21 @@ use colored::*;
 use std::process::Command;
 fn main() {
     // get current branch name by running "grep '^\*' | cut -d' ' -f2 | tr -d '\n'"
+
+    let current_branch = get_current_branch();
+
+    let ticket_number = get_ticket_number(current_branch.as_str());
+
+    let url_prefix = "https://theconstellationagency.atlassian.net/browse";
+    let jira_ticket_url = get_ticket_url(url_prefix, ticket_number.as_str());
+
+    println!();
+    println!("{}", get_info("branch", current_branch));
+    println!("{}", get_info("ticket", ticket_number));
+    println!("{}", get_info("ticket_url", jira_ticket_url));
+}
+
+fn get_current_branch() -> String {
     let git_branch = Command::new("git").arg("branch").output().expect("fail");
     let output_branches = String::from_utf8(git_branch.stdout).unwrap();
     let current_branch_with_star = output_branches
@@ -11,26 +26,25 @@ fn main() {
         .find(|line| line.contains("*"))
         .unwrap();
 
-    let current_branch = current_branch_with_star.replace("*", "").trim().to_string();
+    current_branch_with_star.replace("*", "").trim().to_string()
+}
 
-    let potential_ticket_number = current_branch.split("/").nth(0).unwrap();
-    let ticket_number = if potential_ticket_number.contains("AV2") {
+fn get_ticket_number(branch: &str) -> String {
+    let potential_ticket_number = branch.clone().split("/").nth(0).unwrap();
+
+    if potential_ticket_number.contains("AV2") {
         potential_ticket_number.to_string()
     } else {
         "-".to_string()
-    };
+    }
+}
 
-    let jira_url_prefix = "https://theconstellationagency.atlassian.net/browse";
-    let jira_ticket_url = if ticket_number != "-" {
-        format!("{0}/{1}", jira_url_prefix, ticket_number)
+fn get_ticket_url(url_prefix: &str, ticket_number: &str) -> String {
+    if ticket_number != "-" {
+        format!("{0}/{1}", url_prefix, ticket_number)
     } else {
         "-".to_string()
-    };
-
-    println!();
-    println!("{}", get_info("branch", current_branch));
-    println!("{}", get_info("ticket", ticket_number));
-    println!("{}", get_info("ticket_url", jira_ticket_url));
+    }
 }
 
 fn get_info(kind: &str, arg: String) -> String {
