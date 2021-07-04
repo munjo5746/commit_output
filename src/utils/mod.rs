@@ -13,15 +13,14 @@ pub fn get_current_branch() -> String {
 
     current_branch_with_star.replace("*", "").trim().to_string()
 }
-
+/// Example: <bug|task>/AV2-<numbere>/<description>
 pub fn get_ticket_number(branch: &String) -> String {
-    let potential_ticket_number = branch.split("/").nth(0).unwrap();
-
-    if potential_ticket_number.contains("AV2") {
-        potential_ticket_number.to_string()
-    } else {
-        "-".to_string()
+    let ticket_parts: Vec<String> = branch.split("/").map(str::to_string).collect();
+    if ticket_parts.len() != 3 {
+        return String::from("-");
     }
+
+    return ticket_parts[1].to_string();
 }
 
 pub fn get_ticket_url(url_prefix: &String, ticket_number: &String) -> String {
@@ -45,4 +44,15 @@ pub fn get_info(kind: &str, arg: String) -> String {
 
 pub fn format(title: String, arg: String) -> String {
     format!("{0:<20}: {1}", title.yellow(), arg).to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::utils::get_ticket_number;
+
+    #[test]
+    fn test_get_ticket_number() {
+        let empty_ticket = get_ticket_number(&String::from(""));
+        assert!(empty_ticket == String::from("-"));
+    }
 }
