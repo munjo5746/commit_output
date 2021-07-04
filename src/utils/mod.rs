@@ -54,5 +54,8 @@ mod tests {
     fn test_get_ticket_number() {
         let empty_ticket = get_ticket_number(&String::from(""));
         assert!(empty_ticket == String::from("-"));
+
+        let proper_ticket = get_ticket_number(&String::from("bug/AV2-123/test-ticket"));
+        assert!(proper_ticket == String::from("AV2-123"));
     }
 }
